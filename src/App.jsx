@@ -5,11 +5,9 @@ import {
   BadgeCheck,
   Camera,
   Hand,
-  HeartPulse,
   RefreshCcw,
   Sparkles,
   Timer,
-  Trophy,
 } from 'lucide-react';
 import CoachUiPrototype from './CoachUiPrototype.jsx';
 
@@ -54,133 +52,142 @@ const FINGER_SEQUENCE = [
 const ACTION_COOLDOWNS = {
   bloom: 620,
   'thumb-call': 520,
-  tilt: 430,
+  fan: 460,
   sway: 500,
   circle: 480,
   'thumb-up': 620,
 };
 
 const INITIAL_ACTION_HINTS = {
-  bloom: '先握拳，识别后再慢慢张开手掌。',
-  'thumb-call': '拇指先轻碰食指指尖，碰到就松开。',
-  tilt: '手掌朝镜头，向左或向右轻轻倾斜。',
-  sway: '手腕带着整只手左右平移一小段。',
-  circle: '手腕尽量留在原位，手掌绕着手腕慢慢转。',
-  'thumb-up': '最后竖起大拇指，稳住半秒。',
-};
-
-const SIDE_LABELS = {
-  left: '左',
-  right: '右',
-  up: '上',
-  down: '下',
+  bloom: '握拳蓄能，开掌启动疲劳机。',
+  'thumb-call': '拇指按顺序接通四根线路。',
+  fan: '五指并拢再张开，打开散热百叶窗。',
+  sway: '左右摆手，清掉维修口堵塞。',
+  circle: '手腕留在原位，手掌绕着手腕慢慢转盘。',
+  'thumb-up': '竖起大拇指，给本次维修盖章。',
 };
 
 const drills = [
   {
     id: 'bloom',
-    name: '握拳开花',
-    duration: 10,
-    target: 5,
-    cue: '握拳，再把五指慢慢打开。',
-    gesture: '握拳 -> 开掌',
+    station: '01 启动舱',
+    name: '开掌启动',
+    duration: 8,
+    target: 4,
+    mission: '点火启动核心',
+    cue: '握拳压缩能量，再开掌点火。',
+    gesture: '拳 -> 掌',
+    success: '启动 +1',
     coach: [
-      '找到你的手了，它看起来很想下班。',
-      '很好，先把手指从屏幕宇宙里捞出来。',
-      '别急，手指正在重新加载日常权限。',
+      '启动舱上线，把能量压进核心里。',
+      '开掌命中，点火火花弹出来了。',
+      '别急，机器刚睡醒，节奏稳一点。',
     ],
   },
   {
     id: 'thumb-call',
-    name: '拇指点名',
+    station: '02 接线台',
+    name: '拇指接线',
     duration: 12,
     target: 8,
-    cue: '拇指依次轻碰食指、中指、无名指、小指指尖，碰到就松开。',
-    gesture: '食 -> 中 -> 无名 -> 小',
+    mission: '接通四根线路',
+    cue: '拇指依次轻碰食指、中指、无名指、小指指尖。',
+    gesture: '接 4 线',
+    success: '接通 +1',
     coach: [
-      '拇指开始点名，其他手指请不要装没听见。',
-      '很好，关节开始恢复人类权限。',
-      '这个动作很小，但你的手会记得这份温柔。',
+      '拇指是维修站唯一工程师，开始接线。',
+      '线路亮了，别让其他手指抢戏。',
+      '小动作也算大维修，继续稳住。',
     ],
   },
   {
-    id: 'tilt',
-    name: '手掌倾斜',
+    id: 'fan',
+    station: '03 散热窗',
+    name: '五指散热',
     duration: 10,
     target: 6,
-    cue: '手掌朝镜头，像门一样向左、向右轻轻倾斜。',
-    gesture: '左倾 / 右倾',
+    mission: '打开散热百叶窗',
+    cue: '手掌朝镜头，五指并拢后像扇子一样张开。',
+    gesture: '并拢 -> 张开',
+    success: '散热 +1',
     coach: [
-      '像给手掌换个角度看世界。',
-      '别太用力，放松不是跟自己掰腕子。',
-      '很好，屏幕还在，但手先喘口气。',
+      '散热窗卡住了，先收拢，再把五指扇开。',
+      '百叶窗打开一片，热气正在跑出去。',
+      '很好，指缝越清楚，散热越顺。',
     ],
   },
   {
     id: 'sway',
-    name: '手腕摆摆',
+    station: '04 清障口',
+    name: '摆手清障',
     duration: 10,
     target: 6,
-    cue: '手腕带着整只手左右平移一小段，别甩太快。',
+    mission: '雨刮清掉报错',
+    cue: '手腕带着整只手左右平移一小段。',
     gesture: '左 -> 右',
+    success: '清障 +1',
     coach: [
-      '手腕开始记得自己不是鼠标配件了。',
-      '不错，重复点击宇宙正在松动。',
-      '继续，手腕正在退出高负荷模式。',
+      '屏幕弹满报错了，左右一刷清掉。',
+      '报错少了一块，维修窗口变清楚了。',
+      '继续，像给机器擦掉加班痕迹。',
     ],
   },
   {
     id: 'circle',
-    name: '手腕画圈',
+    station: '05 充能盘',
+    name: '绕腕转盘',
     duration: 12,
     target: 4,
+    mission: '拧开能量阀门',
     cue: '手腕尽量留在原位，手掌绕着手腕慢慢转。',
-    gesture: '画 1 圈',
+    gesture: '转 1 圈',
+    success: '充能 +1',
     coach: [
-      '画个圈，把刚才的紧绷圈出去。',
-      '速度不用快，稳定比炫技更有用。',
-      '很好，手腕正在申请恢复出厂弹性。',
+      '能量阀门卡住了，慢慢拧开。',
+      '刻度咔哒一下，锁销弹开了。',
+      '很好，手腕留住，手掌负责拧。',
     ],
   },
   {
     id: 'thumb-up',
-    name: '点赞收尾',
-    duration: 6,
+    station: '06 验收台',
+    name: '点赞盖章',
+    duration: 8,
     target: 1,
-    cue: '最后给自己的手一个点赞。',
+    mission: '给维修单盖章',
+    cue: '最后竖起大拇指完成验收。',
     gesture: 'Thumb Up',
+    success: '盖章完成',
     coach: [
-      '最后几秒，给这双手一点掌声。',
-      '完成得不错，今天的手暂时不申请罢工。',
-      '点赞保存，本次回血即将写入记忆。',
+      '最后验收，给这台机器一个批准章。',
+      '盖章成功，维修站准备关机。',
+      '完成得不错，手部系统暂时恢复运营。',
     ],
   },
 ];
 
-const TOTAL_TARGETS = drills.reduce((sum, drill) => sum + drill.target, 0);
-
 const idleCoachLines = [
-  '光线有点低也没关系，把手靠近画面一点。',
-  '动作正确时进度会上涨，失败不会扣分。',
-  '不用追求标准，舒服、轻、慢就好。',
-  '这一分钟不是考试，是让手偷偷休假。',
+  '把手放进扫描窗，维修站会自动识别。',
+  '命中任务就会加进度，失败不会扣分。',
+  '每个模块都很短，稳一点比快一点更强。',
+  '这不是健康操，是一台疲劳机器的抢修现场。',
 ];
 
 const titles = [
-  '屏幕幸存者',
-  '手腕临时复活师',
-  '拇指外交官',
-  '重复点击逃生员',
-  '一分钟放松玩家',
-  '手指重启管理员',
+  '疲劳机修复师',
+  '一分钟维修员',
+  '拇指接线大师',
+  '手势车间班长',
+  '转盘充能专家',
+  '验收盖章达人',
 ];
 
 const finalComments = [
-  '屏幕还在，手先活过来了。',
-  '今天的手指重新上线了，但别连续刷太久。',
-  '你的双手申请了 60 秒年假，并已获批。',
-  '检测到快乐值轻微回弹。',
-  '本次放松完成，建议稍后让眼睛也休息一下。',
+  '疲劳机器已恢复运行，手也顺便回血。',
+  '维修记录已保存，建议稍后别立刻把机器打爆。',
+  '本次抢修完成，关节噪音明显下降。',
+  '检测到快乐值和手部电量同步回弹。',
+  '这台机器还能撑一会儿，你的手也一样。',
 ];
 
 function clamp(value, min, max) {
@@ -318,23 +325,18 @@ function getThumbTouchState(landmarks, expectedTip) {
   };
 }
 
-function getPalmTiltState(landmarks) {
-  const thumbSide = {
-    x: (landmarks[5].x + landmarks[9].x) / 2,
-    y: (landmarks[5].y + landmarks[9].y) / 2,
-  };
-  const pinkySide = {
-    x: (landmarks[13].x + landmarks[17].x) / 2,
-    y: (landmarks[13].y + landmarks[17].y) / 2,
-  };
-  const palmWidth = Math.max(distance(thumbSide, pinkySide), 0.065);
-  const handDirection = thumbSide.x < pinkySide.x ? -1 : 1;
-  const tiltValue = ((thumbSide.y - pinkySide.y) / palmWidth) * handDirection;
-  const magnitude = Math.abs(tiltValue);
+function getFingerFanState(landmarks) {
+  const fingertips = [landmarks[8], landmarks[12], landmarks[16], landmarks[20]];
+  const knuckles = [landmarks[5], landmarks[9], landmarks[13], landmarks[17]];
+  const tipXs = fingertips.map((point) => point.x);
+  const knuckleXs = knuckles.map((point) => point.x);
+  const tipSpread = Math.max(...tipXs) - Math.min(...tipXs);
+  const knuckleSpread = Math.max(...knuckleXs) - Math.min(...knuckleXs);
+  const ratio = tipSpread / Math.max(knuckleSpread, 0.08);
 
-  if (tiltValue > 0.15) return { side: 'right', magnitude, isNeutral: false };
-  if (tiltValue < -0.15) return { side: 'left', magnitude, isNeutral: false };
-  return { side: null, magnitude, isNeutral: magnitude < 0.14 };
+  if (ratio > 0.88) return { pose: 'open', ratio };
+  if (ratio < 0.78) return { pose: 'closed', ratio };
+  return { pose: null, ratio };
 }
 
 function getWristSwayState(landmarks, baseX) {
@@ -390,6 +392,130 @@ function getCircleZoneState(landmarks, minRadius) {
   return { zone: 'up', angle: normalizedAngle, distance, minRadius };
 }
 
+function RepairScene({ drill, ticks, progress, pulse }) {
+  const progressValue = clamp(progress, 0, 100);
+  const clearedCount = Math.min(drill.target, ticks);
+  const sceneClassName = `repair-scene scene-${drill.id} ${pulse ? 'is-hit' : ''}`;
+
+  if (drill.id === 'bloom') {
+    return (
+      <div className={sceneClassName} style={{ '--scene-progress': `${progressValue}%` }} aria-hidden="true">
+        <div className="starter-game">
+          <div className="power-seed">
+            <span />
+            {Array.from({ length: drill.target }).map((_, index) => (
+              <i key={index} className={index < ticks ? 'is-lit' : ''} />
+            ))}
+          </div>
+          <div className="power-burst">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <b key={index} className={ticks > index / 2 ? 'is-on' : ''} />
+            ))}
+          </div>
+          <strong>点火</strong>
+        </div>
+      </div>
+    );
+  }
+
+  if (drill.id === 'thumb-call') {
+    return (
+      <div className={sceneClassName} style={{ '--scene-progress': `${progressValue}%` }} aria-hidden="true">
+        <div className="circuit-game">
+          {FINGER_SEQUENCE.map((finger, index) => (
+            <div key={finger.tip} className={`finger-port ${ticks > index ? 'is-lit' : ''}`}>
+              <span>{finger.name.slice(0, 1)}</span>
+              <i />
+              <div className="wire-charge">
+                <b className={ticks > index ? 'is-on' : ''} />
+                <b className={ticks > index + FINGER_SEQUENCE.length ? 'is-on' : ''} />
+              </div>
+            </div>
+          ))}
+          <div className="circuit-core">
+            <span>{Math.min(ticks, drill.target)}/{drill.target}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (drill.id === 'fan') {
+    return (
+      <div className={sceneClassName} style={{ '--scene-progress': `${progressValue}%` }} aria-hidden="true">
+        <div className="fan-game">
+          <div className="fan-window">
+            {Array.from({ length: drill.target }).map((_, index) => (
+              <i key={index} className={index < ticks ? 'is-open' : ''} />
+            ))}
+          </div>
+          <div className="heat-lines">
+            <span />
+            <span />
+            <span />
+          </div>
+          <strong>散热中</strong>
+        </div>
+      </div>
+    );
+  }
+
+  if (drill.id === 'sway') {
+    return (
+      <div className={sceneClassName} style={{ '--scene-progress': `${progressValue}%` }} aria-hidden="true">
+        <div className="wipe-game">
+          <div className="error-window">
+            <strong>ERROR</strong>
+            <span />
+            <span />
+            {Array.from({ length: drill.target }).map((_, index) => (
+              <i key={index} className={index < clearedCount ? 'is-cleared' : ''} />
+            ))}
+          </div>
+          <div className="wiper-blade" />
+        </div>
+      </div>
+    );
+  }
+
+  if (drill.id === 'circle') {
+    return (
+      <div className={sceneClassName} style={{ '--dial-angle': `${progressValue * 2.7}deg` }} aria-hidden="true">
+        <div className="dial-game">
+          <div className="safe-dial">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <i key={index} className={index < ticks * 3 ? 'is-lit' : ''} />
+            ))}
+            <span />
+          </div>
+          <div className="lock-pins">
+            {Array.from({ length: drill.target }).map((_, index) => (
+              <b key={index} className={index < ticks ? 'is-open' : ''} />
+            ))}
+          </div>
+          <strong>拧阀解锁</strong>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={sceneClassName} style={{ '--scene-progress': `${progressValue}%` }} aria-hidden="true">
+      <div className="stamp-desk">
+        <div className="repair-form">
+          <span />
+          <span />
+          <span />
+          <strong className={ticks >= drill.target ? 'is-stamped' : ''}>PASS</strong>
+        </div>
+        <div className={`stamp-block ${ticks >= drill.target ? 'is-done' : ''}`}>
+          <i />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   if (['coach-ui', 'progress-ui'].includes(new URLSearchParams(window.location.search).get('prototype'))) {
     return <CoachUiPrototype />;
@@ -405,13 +531,14 @@ function App() {
   const [coachLine, setCoachLine] = useState(idleCoachLines[0]);
   const [pulse, setPulse] = useState(false);
   const [successFlash, setSuccessFlash] = useState(false);
+  const [successToast, setSuccessToast] = useState('命中 +1');
   const [mode, setMode] = useState('camera');
   const [cameraStatus, setCameraStatus] = useState('idle');
   const [cameraMessage, setCameraMessage] = useState('点击开始回血，允许浏览器使用摄像头。');
   const [actionHint, setActionHint] = useState(INITIAL_ACTION_HINTS.bloom);
   const [motionDebug, setMotionDebug] = useState({
     thumb: '-',
-    tilt: '-',
+    fan: '-',
     sway: '-',
     circle: '0/3',
   });
@@ -431,8 +558,8 @@ function App() {
   const stableGestureRef = useRef({ name: 'None', since: 0, score: 0 });
   const landmarkCandidateRef = useRef({ key: null, since: 0 });
   const thumbStepRef = useRef(0);
-  const tiltSideRef = useRef(null);
-  const tiltReadyRef = useRef(true);
+  const fanPoseRef = useRef(null);
+  const fanReadyRef = useRef(true);
   const wristSwayBaseXRef = useRef(null);
   const wristSwaySideRef = useRef(null);
   const wristCircleZonesRef = useRef(new Set());
@@ -442,9 +569,8 @@ function App() {
   const remaining = Math.max(TOTAL_SECONDS - elapsed, 0);
   const currentTicks = drillTicks[current.drill.id] ?? 0;
   const completedDrills = Object.values(completed).filter(Boolean).length;
-  const completedTicks = Object.values(drillTicks).reduce((sum, value) => sum + value, 0);
   const drillProgress = Math.round((currentTicks / current.drill.target) * 100);
-  const totalProgress = clamp(Math.round((completedTicks / TOTAL_TARGETS) * 100), 0, 100);
+  const drillTimeProgress = clamp(Math.round((current.drillElapsed / current.drill.duration) * 100), 0, 100);
   const result = useMemo(
     () => getResult(score, maxCombo, completedDrills),
     [completedDrills, maxCombo, score],
@@ -469,12 +595,12 @@ function App() {
     landmarkCandidateRef.current = { key: null, since: 0 };
     stableGestureRef.current = { name: 'None', since: 0, score: 0 };
     setActionHint(INITIAL_ACTION_HINTS[drillId]);
-    setMotionDebug({ thumb: '-', tilt: '-', sway: '-', circle: '0/3' });
+    setMotionDebug({ thumb: '-', fan: '-', sway: '-', circle: '0/3' });
 
     if (drillId === 'thumb-call') thumbStepRef.current = 0;
-    if (drillId === 'tilt') {
-      tiltSideRef.current = null;
-      tiltReadyRef.current = true;
+    if (drillId === 'fan') {
+      fanPoseRef.current = null;
+      fanReadyRef.current = true;
     }
     if (drillId === 'sway') {
       wristSwayBaseXRef.current = null;
@@ -568,15 +694,16 @@ function App() {
     lastAcceptedGestureRef.current = 'None';
     lastAutoAdvanceAtRef.current = 0;
     thumbStepRef.current = 0;
-    tiltSideRef.current = null;
-    tiltReadyRef.current = true;
+    fanPoseRef.current = null;
+    fanReadyRef.current = true;
     wristSwayBaseXRef.current = null;
     wristSwaySideRef.current = null;
     wristCircleZonesRef.current = new Set();
     stableGestureRef.current = { name: 'None', since: 0, score: 0 };
     landmarkCandidateRef.current = { key: null, since: 0 };
     setActionHint(INITIAL_ACTION_HINTS.bloom);
-    setMotionDebug({ thumb: '-', tilt: '-', sway: '-', circle: '0/3' });
+    setSuccessToast('命中 +1');
+    setMotionDebug({ thumb: '-', fan: '-', sway: '-', circle: '0/3' });
   }
 
   function stopCameraResources() {
@@ -713,14 +840,14 @@ function App() {
     const currentTicks = drillTicksRef.current[active.id] ?? 0;
 
     if (currentTicks >= active.target) {
-      setActionHint('这一节够了，手先别卷，等下一项。');
+      setActionHint('这个模块修好了，等下一张任务卡。');
       return;
     }
 
     if (!landmarks) {
       clearLandmarkCandidate();
-      setActionHint('把一只手完整放进画面，手腕也露出来。');
-      setMotionDebug({ thumb: '-', tilt: '-', sway: '-', circle: '0/4' });
+      setActionHint('把维修手放进扫描窗，手腕也露出来。');
+      setMotionDebug({ thumb: '-', fan: '-', sway: '-', circle: '0/3' });
       return;
     }
 
@@ -729,8 +856,8 @@ function App() {
     const isCoolingDown = now - lastAutoAdvanceAtRef.current < cooldown;
 
     if (active.id === 'bloom') {
-      const nextGesture = lastAcceptedGestureRef.current === 'Closed_Fist' ? '张开手掌' : '握拳';
-      setActionHint(`现在${nextGesture}，动作慢一点更容易识别。`);
+      const nextGesture = lastAcceptedGestureRef.current === 'Closed_Fist' ? '开掌点火' : '握拳蓄能';
+      setActionHint(`启动舱任务：现在${nextGesture}。`);
 
       if (isCoolingDown || !['Closed_Fist', 'Open_Palm'].includes(stableGestureName)) return;
       if (lastAcceptedGestureRef.current === stableGestureName) return;
@@ -745,7 +872,7 @@ function App() {
       const expectedFinger = FINGER_SEQUENCE[thumbStepRef.current % FINGER_SEQUENCE.length];
       const touch = getThumbTouchState(landmarks, expectedFinger.tip);
 
-      setActionHint(`拇指轻碰${expectedFinger.name}指尖，碰到就松开。`);
+      setActionHint(`接线台任务：拇指接到${expectedFinger.name}线，碰到就松开。`);
       setMotionDebug((value) => ({
         ...value,
         thumb: `${expectedFinger.name} ${Math.round(touch.normalized * 100)}%`,
@@ -763,37 +890,40 @@ function App() {
       registerSuccessForDrill(active);
 
       const nextFinger = FINGER_SEQUENCE[thumbStepRef.current % FINGER_SEQUENCE.length];
-      setActionHint(`收到，下一下碰${nextFinger.name}。`);
+      setActionHint(`线路已亮，下一根接${nextFinger.name}。`);
       return;
     }
 
-    if (active.id === 'tilt') {
-      const tilt = getPalmTiltState(landmarks);
-      const nextSide = tiltSideRef.current === 'left' ? '右' : tiltSideRef.current === 'right' ? '左' : '左或右';
+    if (active.id === 'fan') {
+      const fan = getFingerFanState(landmarks);
+      const nextPose = fanPoseRef.current === 'open' ? '并拢五指' : '张开五指';
 
       setActionHint(
-        tiltReadyRef.current
-          ? `手掌朝镜头，轻轻向${nextSide}倾斜。`
-          : '先回到中间，别急着抢答。',
+        fanReadyRef.current
+          ? `散热窗任务：${nextPose}，像打开一把小扇子。`
+          : '先做反方向动作，让百叶窗重新卡住。',
       );
       setMotionDebug((value) => ({
         ...value,
-        tilt: tilt.side ? `${SIDE_LABELS[tilt.side]}倾` : '居中',
+        fan: fan.pose ? `${fan.pose === 'open' ? '张开' : '并拢'} ${Math.round(fan.ratio * 100)}%` : `${Math.round(fan.ratio * 100)}%`,
       }));
 
-      if (!tilt.side) {
-        if (tilt.isNeutral) tiltReadyRef.current = true;
+      if (!fan.pose) {
         clearLandmarkCandidate();
         return;
       }
 
-      if (isCoolingDown || !tiltReadyRef.current || tilt.side === tiltSideRef.current) {
+      if (fanPoseRef.current && fan.pose !== fanPoseRef.current) {
+        fanReadyRef.current = true;
+      }
+
+      if (isCoolingDown || !fanReadyRef.current || fan.pose === fanPoseRef.current) {
         return;
       }
-      if (!isStableLandmarkCandidate(`tilt-${tilt.side}`, now, 70)) return;
+      if (!isStableLandmarkCandidate(`fan-${fan.pose}`, now, 55)) return;
 
-      tiltSideRef.current = tilt.side;
-      tiltReadyRef.current = false;
+      fanPoseRef.current = fan.pose;
+      fanReadyRef.current = false;
       clearLandmarkCandidate();
       lastAutoAdvanceAtRef.current = now;
       registerSuccessForDrill(active);
@@ -804,7 +934,7 @@ function App() {
       const result = getWristSwayState(landmarks, wristSwayBaseXRef.current);
       if (wristSwayBaseXRef.current === null) wristSwayBaseXRef.current = result.baseX;
 
-      setActionHint('手腕带着整只手左右平移，像把鼠标从工位请出去。');
+      setActionHint('清障口任务：手腕带着整只手左右扫开堵塞物。');
       setMotionDebug((value) => ({
         ...value,
         sway: `${Math.round(Math.abs(result.deltaX) * 100)} / ${Math.round(result.threshold * 100)}`,
@@ -825,18 +955,18 @@ function App() {
     }
 
     if (active.id === 'circle') {
-      const minRadius = clamp(getPalmScale(landmarks) * 0.14, 0.018, 0.05);
+      const minRadius = clamp(getPalmScale(landmarks) * 0.09, 0.012, 0.045);
       const circle = getCircleZoneState(landmarks, minRadius);
 
       if (circle.zone) wristCircleZonesRef.current.add(circle.zone);
 
-      setActionHint(`手腕尽量留在原位，手掌绕着手腕慢慢转。已捕捉 ${wristCircleZonesRef.current.size}/3 个方向。`);
+      setActionHint(`充能盘任务：手腕留在原位，手掌慢慢转。已捕捉 ${wristCircleZonesRef.current.size}/2 个方向。`);
       setMotionDebug((value) => ({
         ...value,
-        circle: `${wristCircleZonesRef.current.size}/3`,
+        circle: `${wristCircleZonesRef.current.size}/2`,
       }));
 
-      if (isCoolingDown || wristCircleZonesRef.current.size < 3) return;
+      if (isCoolingDown || wristCircleZonesRef.current.size < 2) return;
 
       wristCircleZonesRef.current = new Set();
       lastAutoAdvanceAtRef.current = now;
@@ -845,7 +975,7 @@ function App() {
     }
 
     if (active.id === 'thumb-up') {
-      setActionHint('竖起大拇指，给这只手一点精神赔偿。');
+      setActionHint('验收台任务：竖起大拇指，给维修单盖章。');
     }
 
     if (active.id === 'thumb-up' && !isCoolingDown && stableGestureName === 'Thumb_Up') {
@@ -866,6 +996,7 @@ function App() {
 
     setPulse(true);
     setSuccessFlash(true);
+    setSuccessToast(drill.success ?? '命中 +1');
     window.setTimeout(() => setPulse(false), 260);
     window.setTimeout(() => setSuccessFlash(false), 620);
     drillTicksRef.current = nextTicksMap;
@@ -898,34 +1029,34 @@ function App() {
       <main className="app-shell">
         <section className="hero-panel">
           <div className="brand-pill">
-            <HeartPulse size={18} />
-            <span>一分钟手部放松小游戏</span>
+            <Sparkles size={18} />
+            <span>60 秒手势维修站</span>
           </div>
 
           <div className="hero-copy">
-            <h1>手部回血 60 秒</h1>
-            <p>打开摄像头，跟着温柔嘴欠的 AI 教练做 6 个手指和手腕动作。</p>
+            <h1>手势维修站</h1>
+            <p>打开摄像头，用 6 个真实手势抢修一台疲劳机器。</p>
           </div>
 
           <div className="hand-stage" aria-hidden="true">
             <div className="hand-card main-card">
               <Hand size={64} />
-              <span>Ready</span>
+              <span>SCAN</span>
             </div>
             <div className="orbit-card top-card">
               <Timer size={24} />
               <strong>60s</strong>
             </div>
             <div className="orbit-card bottom-card">
-              <Sparkles size={24} />
-              <strong>回血</strong>
+              <Activity size={24} />
+              <strong>6关</strong>
             </div>
           </div>
 
           <div className="action-row">
             <button className="primary-button" type="button" onClick={startCamera}>
               <Camera size={20} />
-              <span>开始回血</span>
+              <span>开工维修</span>
             </button>
           </div>
         </section>
@@ -938,13 +1069,13 @@ function App() {
       <main className="app-shell">
         <section className="result-panel">
           <div className="result-header">
-            <Trophy size={34} />
-            <span>一分钟放松报告</span>
+            <BadgeCheck size={34} />
+            <span>维修报告</span>
           </div>
 
           <div className="score-ring">
             <strong>{result.recharge}%</strong>
-            <span>手部回血指数</span>
+            <span>机器回血指数</span>
           </div>
 
           <div className="result-title">{result.title}</div>
@@ -952,7 +1083,7 @@ function App() {
 
           <div className="stats-grid">
             <div>
-              <span>完成动作</span>
+              <span>修好模块</span>
               <strong>{completedDrills}/6</strong>
             </div>
             <div>
@@ -960,18 +1091,18 @@ function App() {
               <strong>{maxCombo}</strong>
             </div>
             <div>
-              <span>本局得分</span>
+              <span>维修得分</span>
               <strong>{score}</strong>
             </div>
             <div>
-              <span>主要使用手</span>
-              <strong>任意手</strong>
+              <span>识别模式</span>
+              <strong>摄像头</strong>
             </div>
           </div>
 
           <button className="primary-button wide-button" type="button" onClick={restart}>
             <RefreshCcw size={20} />
-            <span>再来 60 秒</span>
+            <span>再修一轮</span>
           </button>
         </section>
       </main>
@@ -984,14 +1115,16 @@ function App() {
         <header className="game-topbar">
           <div className="timer-block">
             <Timer size={20} />
+            <span>剩余</span>
             <strong>{remaining}s</strong>
           </div>
           <div className="drill-title">
-            <span>当前动作</span>
+            <span>{current.drill.station}</span>
             <strong>{current.drill.name}</strong>
           </div>
           <div className="combo-block">
             <Activity size={20} />
+            <span>连击</span>
             <strong>{combo}x</strong>
           </div>
         </header>
@@ -999,31 +1132,30 @@ function App() {
         <div className="camera-frame has-camera">
           <video ref={videoRef} className="camera-video" autoPlay muted playsInline />
           <canvas ref={canvasRef} className={`landmark-canvas ${pulse ? 'is-pulsing' : ''}`} />
-          {successFlash && <div className="gesture-success-pop">漂亮 +1</div>}
+          <RepairScene drill={current.drill} ticks={currentTicks} progress={drillProgress} pulse={pulse} />
+          {successFlash && <div className="gesture-success-pop">{successToast}</div>}
+          <div className={`repair-widget repair-${current.drill.id}`}>
+            <div className="repair-widget-head">
+              <span>{cameraStatus === 'ready' ? current.drill.station : '扫描舱'}</span>
+              <strong>{cameraStatus === 'ready' ? current.drill.mission : '等待摄像头'}</strong>
+            </div>
+            <div className="task-pips" aria-hidden="true">
+              {Array.from({ length: current.drill.target }).map((_, index) => (
+                <i key={`${current.drill.id}-${index}`} className={index < currentTicks ? 'is-lit' : ''} />
+              ))}
+            </div>
+            <div className="rhythm-strip" aria-hidden="true">
+              <span style={{ width: `${drillTimeProgress}%` }} />
+            </div>
+          </div>
           <div className="camera-command">
-            <span>{cameraStatus === 'ready' ? '现在做' : '正在准备'}</span>
+            <span>{cameraStatus === 'ready' ? '当前任务' : '正在准备'}</span>
             <strong>{cameraStatus === 'ready' ? current.drill.name : '摄像头'}</strong>
             <em>{cameraStatus === 'ready' ? actionHint : cameraMessage}</em>
           </div>
           <div className="camera-coach-note">
-            <span>教练小纸条</span>
+            <span>维修广播</span>
             <p>{coachLine}</p>
-          </div>
-        </div>
-
-        <div className="progress-area single-progress">
-          <div className="single-progress-copy">
-            <span>本动作</span>
-            <strong>{current.drill.name}</strong>
-            <em>
-              {currentTicks}/{current.drill.target} 次
-            </em>
-          </div>
-          <div className="single-progress-ring" style={{ '--progress': `${drillProgress}%` }}>
-            <b>{drillProgress}%</b>
-          </div>
-          <div className="progress-track single-track">
-            <span style={{ width: `${drillProgress}%` }} />
           </div>
         </div>
 
