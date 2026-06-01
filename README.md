@@ -1,6 +1,15 @@
 # One-Minute Gesture Flow
 
-A React + Vite mini game for a one-minute hand gesture exercise session.
+One-Minute Gesture Flow 是一个“一分钟手势操”互动小游戏。
+
+它通过摄像头识别手部动作，引导用户在 60 秒内完成手部活动，适合久坐学习、办公后快速放松手腕和手指。
+
+## Features
+
+- 60 秒手势操体验
+- 摄像头手部动作识别
+- 实时引导与互动反馈
+- 适合桌面端浏览器运行
 
 ## Tech Stack
 
